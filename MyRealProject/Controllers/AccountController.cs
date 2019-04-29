@@ -31,19 +31,19 @@ namespace MyRealProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                var userr = _userRepository
+                var currentUser = _userRepository
                     .GetMany(x => x.Email == user.Email && x.Password == user.Password && x.IsActive == true)
                     .SingleOrDefault();
-                if (userr != null)
+                if (currentUser != null)
                 {
-                    if (userr.Role.RoleName == "Admin")
+                    if (currentUser.Role.RoleName == "Admin")
                     {
-                        Session["UserEmail"] = userr.Id;
+                        Session["Admin"] = currentUser.Id;
                         return RedirectToAction("Index", "Home");
                     }
 
                     ViewBag.Message = "Unauthorized user";
-                    return View(userr);
+                    return View(currentUser);
                 }
             }
             ViewBag.Mes = "User not found";

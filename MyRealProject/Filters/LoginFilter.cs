@@ -12,7 +12,7 @@ namespace MyRealProject.Filters
     {
         public void OnActionExecuted(ActionExecutedContext filterContext)
         {
-            var session = filterContext.HttpContext.Session["UserEmail"];
+            var session = filterContext.HttpContext.Session["Admin"];
             if (session == null)
             {
                 filterContext.Result = new RedirectToRouteResult(
