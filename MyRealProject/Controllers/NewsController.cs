@@ -45,7 +45,7 @@ namespace MyRealProject.Controllers
         [ValidateInput(false)]
         public ActionResult NewsAdd(News news, HttpPostedFileBase uploadFile, IEnumerable<HttpPostedFileBase> uploadFiles)
         {
-            var session = HttpContext.Session["UserEmail"];
+            var session = HttpContext.Session["Admin"];
 
             if (ModelState.IsValid)
             {
