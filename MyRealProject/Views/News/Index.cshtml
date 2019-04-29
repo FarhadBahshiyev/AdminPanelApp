@@ -1,0 +1,98 @@
+﻿@model List<MyRealProject.Models.News>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <header class="panel-heading">Responsive table</header>
+                <div class="panel-body">
+                    @if (TempData["Information"] != null)
+                    {
+                        <div class="alert alert-success">@TempData["Information"]</div>
+                    }
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Image</th>
+                                    <th>Title</th>
+                                    <th>Description</th>
+                                    <th>Short description</th>
+                                    <th>Status</th>
+                                    <th>Upload Date</th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td><span class="label label-success">@item.Id</span></td>
+                                        <td><img src="@item.İmage" alt="@item.Title" style="width: 100px" /></td>
+                                        <td>@item.Title</td>
+                                        <td>@item.Description</td>
+                                        <td>@item.ShortDescription</td>
+                                        <td>
+                                            @if (item.IsActive)
+                                            {<b class="label label-success">Active</b>}
+                                            else
+                                            {<b class="label-danger">Passive</b>}
+                                        </td>
+                                        <td>@item.UploadDate</td>
+                                        <td>
+                                            <a href="@Url.Action("ActivePassive","News", new {Id = item.Id})" class="btn btn-default btn-sm">Active/Passive</a>
+                                        </td>
+                                        <td>
+
+                                            <input type="submit" id="btnDelete" class="btn btn-default btn-sm" data-id="@item.Id" value="Delete"/>
+
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts
+{
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/notify.js"></script>
+
+    <script>
+        $("#btnDelete").click(function () {
+            var gelenId = $(this).data("id");
+            var deleteTr = $(this).closest("tr");
+            $.ajax({
+                url: "/News/Delete/" + gelenId,
+                type: "POST",
+                datatype: 'json',
+                success: function (responce) {
+                    if (responce.Success) {
+                        $.notify(responce.Message, "success");
+                        deleteTr.fadeOut(300, function() {
+                            deleteTr.remove();
+                        });
+                    }
+                    else {
+                        $.notify(responce.Message, "error");
+                    }
+
+                }
+            });
+        });
+    </script>
+}
+

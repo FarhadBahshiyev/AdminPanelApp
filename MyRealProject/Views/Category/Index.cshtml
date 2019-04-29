@@ -1,0 +1,83 @@
+﻿@using MyRealProject.Models
+@model IEnumerable<Category>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Responsive table -->
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <header class="panel-heading">Responsive table</header>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Category Name</th>
+                                    <th>Status</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td><span class="label label-success">@item.Id</span></td>
+                                        <td>@item.CategoryName</td>
+                                        <td>
+                                            @if (item.IsActive)
+                                            {<b class="label label-success">Active</b>}
+                                            else
+                                            {<b class="label-danger">Passive</b>}
+                                    </td>
+                                    <td>
+                                        <a href="@Url.Action("Edit","Category", new {Id = item.Id})" class="btn btn-default btn-sm">Edit</a>
+                                        <button class="btn btn-default btn-sm btnDelete" data-id="@item.Id">Delete</button>
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/notify.js"></script>
+
+    <script>
+        $(function() {
+            $(".btnDelete").click(function() {
+                var deleteTr = $(this).closest("tr");
+                var gelenId = $(this).data("id");
+                $.ajax({
+                    url: "/Category/Delete/" + gelenId,
+                    type: "POST",
+                    datatype: 'json',
+                    success: function (responce) {
+                        if (responce.Success) {
+                            $.notify(responce.Message, "success");
+                            deleteTr.fadeOut(300, function() {
+                                deleteTr.remove();
+                            });
+                        }
+                        else {
+                            $.notify(responce.Message, "error");
+                        }
+
+                    }
+                });
+            });
+        });
+    </script>
+}

@@ -1,0 +1,67 @@
+﻿@model MyRealProject.Models.News
+@{
+    ViewBag.Title = "NewsAdd";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/Scripts/ckeditor/ckeditor.js"></script>
+@using (Html.BeginForm("NewsAdd", "News", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <header class="panel-heading">@ViewBag.Title</header>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label>Title</label>
+                            @Html.TextBoxFor(x => x.Title, new { @class = "form-control", id = "Title", placeholder = "Enter Title" })
+                        </div>
+                        <div class="form-group">
+                            <label>Short Description</label>
+                            @Html.TextAreaFor(m => m.ShortDescription, new { @class = "form-control" })
+                            <script type="text/javascript">
+                                var editor = CKEDITOR.instances['ShortDescription'];
+                                if (editor) { editor.destroy(true) }
+                                CKEDITOR.replace('ShortDescription',
+                                    {
+                                        entermode: CKEDITOR.ENTER_BR,
+                                    });
+
+                            </script>
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            @Html.TextAreaFor(m => m.Description, new { @class = "ckeditor" })
+
+                            <script type="text/javascript">
+                                var editor = CKEDITOR.instances['Description'];
+                                if (editor) { editor.destroy(true) }
+                                CKEDITOR.replace('Description',
+                                    {
+                                        entermode: CKEDITOR.ENTER_BR,
+                                    });
+
+                            </script>
+                        </div>
+                        <div class="form-group">
+                            <label>Image</label>
+                            <input type="file" name="uploadFile" accept="image/*" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label>Images</label>
+                            <input type="file" name="uploadFiles" accept="image/*" class="form-control" multiple />
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                @Html.CheckBoxFor(m => m.IsActive, new { @checked = "checked", id = "IsActive" })Is Active?
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-default">Save</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

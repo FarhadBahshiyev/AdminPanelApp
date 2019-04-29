@@ -1,0 +1,70 @@
+﻿@{
+    ViewBag.Title = "CategoryInsert";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <header class="panel-heading">@ViewBag.Title</header>
+                <div class="panel-body">
+                    <form role="form">
+                        <div class="form-group">
+                            <label>Category Name</label>
+                            <input type="text" class="form-control" id="categoryName" placeholder="Category Name">
+                        </div>
+                        <div class="form-group">
+                            <label>Category URL</label>
+                            <input type="text" class="form-control" id="categoryUrl" placeholder="Category URL">
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" id="IsActive" checked="checked">Is Active?
+                            </label>
+                        </div>
+                        <a href="#" class="btn btn-default" id="Save">Save</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts
+{
+    <script src="~/Scripts/bootbox.min.js"></script>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+
+
+    <script>
+        $(function() {
+            $("#Save").click(function () {
+
+                $.ajax({
+                    url: "/Category/CategoryInsert",
+                    type: "POST",
+                    data: {
+                        CategoryName: $("#categoryName").val(),
+                        URL: $("#categoryUrl").val(),
+                        IsActive: $("#IsActive").is(":checked")
+                    },
+                    datatype: 'json',
+                    success: function(responce) {
+                        if (responce.Success) {
+                            bootbox.alert(responce.Message,
+                                function () {
+                                    location.reload();
+                                });
+                        }
+                        else {
+                            bootbox.alert(responce.Message);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+}
+
